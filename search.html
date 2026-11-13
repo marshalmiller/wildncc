@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search | Wild NCC</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="images/favicon.jpg">
+
+</head>
+<body>
+<div id="container">
+  <header>
+    <h1><a href="index.html">Wild NCC</a></h1>
+    <p class="tagline">A Field Guide for Northampton Community College</p>
+    <ul id="secondary" class="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="species-index.html">Species Index</a></li>
+      <li><a href="map2/">Guide Map</a></li>
+      <li><a href="taxonomy/">Locations</a></li>
+      <li><a href="contact-wild-ncc/">Contact</a></li>
+      <li><a href="search.html">Search</a></li>
+      <li class="ext"><a href="https://www.northampton.edu" rel="noopener">NCC</a></li>
+    </ul>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="category/animals/">Animals</a></li><li><a href="category/fungus/">Fungus</a></li><li><a href="category/lichens-mosses/">Lichens & Mosses</a></li><li><a href="category/plants/">Plants</a></li><li><a href="category/pond-life/">Pond Life</a></li>
+    </ul>
+  </nav>
+<div class="content">
+  <h2>Search the guide</h2>
+  <div id="breadcrumb"><a href="index.html">home</a> &raquo; Search</div>
+  <div id="main-content">
+    <input id="q" type="search" placeholder="Type to filter species&hellip;" autocomplete="off">
+    <div id="results" class="grid indexgrid"></div>
+    <p class="note" id="result-note"></p>
+  </div>
+</div>
+<script>
+const INDEX = fetch('assets/search-index.json').then(r=>r.json());
+const box = document.getElementById('q'), out = document.getElementById('results'), note = document.getElementById('result-note');
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+/* innerHTML here renders only entries from site-generated search-index.json;
+   every text field passes through esc() (textContent round-trip), the raw box.value
+   is never placed in innerHTML (only note.textContent, which is inert), and link/img
+   paths are authored by build_site.py — no untrusted DOM sinks. */
+async function run(){
+  const idx = await INDEX;
+  const q = box.value.trim().toLowerCase();
+  box.focus();
+  const hits = !q ? idx.slice(0,24) : idx.filter(it => (it.t+' '+(it.s||'')+' '+(it.x||'')+' '+(it.c||[]).join(' ')).toLowerCase().includes(q));
+  out.innerHTML = hits.map(it => `<div class="species-card"><a href="${it.u}">${it.i?`<img src="${it.i}" alt="" loading="lazy">`:'<div class="no-photo">✦</div>'}<span class="card-name">${esc(it.t)}</span>${it.s?`<span class="cats-txt">${esc(it.s)}</span>`:''}</a></div>`).join('');
+  note.textContent = hits.length ? `${hits.length} result${hits.length===1?'':'s'}${q?' for “'+box.value+'”':''}${(hits.length===24&&!q)?' — showing first 24 of '+idx.length+', start typing to narrow':''}` : `No matches — the archive never captured a page with that name.`;
+}
+box.addEventListener('input', run);
+run();
+</script>
+<footer>
+  <div>
+    <address>&copy;Northampton Community College &bull; 3835 Green Pond Rd Bethlehem, PA 18020 &bull; Site Designed/Developed by: <a href="http://nccart.com/ckoelle">Chris Koelle</a></address>
+    <a href="https://www.northampton.edu" title="NCC Website">Northampton Community College</a>
+    <p class="clone-note">Static HTML clone rebuilt from the <a href="https://web.archive.org/web/20200814225044/http://wildncc.com/" rel="noopener">Wayback Machine archive</a> of wildncc.com (student field-guide project, 2010&ndash;2021). All keys, photos and text by NCC students.</p>
+  </div>
+</footer>
+</div>
+</body>
+</html>
