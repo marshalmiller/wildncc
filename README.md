@@ -44,3 +44,24 @@ path (`/wildncc/`) work without configuration.
   capture is an unrecoverable redirect stub; sample-page was WordPress
   boilerplate).
 - Search is client-side over `assets/search-index.json`.
+
+## Image backfill (2026-11-16)
+
+Many Wayback captures never archived the species thumbnails, so ~100 species
+pages were shipped without photos and their index cards showed a placeholder.
+This run filled every gap:
+
+- **55 species pages** now show the **original archived student photo** recovered
+  from the Wayback asset cache (previously used only on cards, or never wired).
+- **46 species pages/badges** whose photo was never archived use openly-licensed
+  images from **Wikimedia Commons / Wikidata**, square-cropped to
+  `images/<slug>-290x290.jpg`. Licenses: Public domain / CC0 / CC BY / CC BY-SA
+  only; per-image author + license are recorded in `image-credits.json` and
+  rendered on **image-credits.html** (linked from every site footer).
+- Species-index and category cards replaced their `placeholder-*.jpg` / no-photo
+  states with the species' own image; `assets/search-index.json` was filled so
+  the client-side search shows thumbnails too.
+- Two text-less stub pages (Colorado Spruce, Ground Beetle) show their photo as
+  the page body; the `birds-avians` stub (a leftover map page) stays photo-less
+  on the page itself but its card uses the red-winged blackbird image.
+
