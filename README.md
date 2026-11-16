@@ -65,3 +65,7 @@ This run filled every gap:
   the page body; the `birds-avians` stub (a leftover map page) stays photo-less
   on the page itself but its card uses the red-winged blackbird image.
 
+## Rebuilding the backfill
+
+- Tools live in `tools/`: `fetch-missing-images.py` (re-fetch/extend the openly-licensed set; writes `image-manifest.json`), `verify-image-backfill.py` (post-change gate), `backfill-contact-sheet.py` (visual QA sheet of fetched picks).
+- Runbook: `~/runbooks/2026-11-16-wildncc-image-backfill.md` (method, license rules, verification transcript).
